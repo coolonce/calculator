@@ -9,21 +9,26 @@ class DietType(IntEnum):
 class NutrientCalculator:
     #Здесь рассчитываем норму калорийности+количество белков,жирова, углеводов
 
-    def calculate_nutrients(self, gender, mass, height, age, diet_type, calories_coef=1.5):
-        #Решил выбрать формулу Харриса Бенедикта, так как там учитывается именно текущий вес, а не желаемый
+    def calculate_nutrients(self, gender, mass, height, age, diet_type, calories_coef=1.4):
+        #алгоритм Харриса-Бенедикта используется при похудении
+        #в остальных же случаях используется алгоритм Миффлина-Сан Жеора
         main_energy_exchange = 0
         if gender == 0: #Для женщин
-            main_energy_exchange = 65 + 9.6*mass + 1.8*height - 4.7*age
+            if diet_type == DietType.WEIGHT_LOSS:
+                main_energy_exchange = 65 + 9.6*mass + 1.8*height - 4.7*age
+            else:
+                main_energy_exchange = 10*mass + 6.25*height - 5*age -161
         else: #Для мужчин
-            main_energy_exchange = 66 + 3.7*mass + 6*height - 6.8*age
-
+            if diet_type == DietType.WEIGHT_LOSS:
+                main_energy_exchange = 66 + 3.7*mass + 6*height - 6.8*age
+            else:
+                main_energy_exchange = 10 * mass + 6.25 * height - 5*age + 5
         energy_loss = main_energy_exchange*calories_coef
-        consumption_rate_norm = main_energy_exchange+energy_loss
 
-        calories = self.__calories_interval_calculation(consumption_rate_norm, diet_type)
-        proteins = self.__proteins_calculation(consumption_rate_norm, calories, diet_type)
-        fats = self.__fats_calculation(consumption_rate_norm, calories, diet_type)
-        carbohydrates = self.__carbohydrates_calculation(consumption_rate_norm, calories, proteins, fats, diet_type)
+        calories = self.__calories_interval_calculation(energy_loss, diet_type)
+        proteins = self.__proteins_calculation(energy_loss, calories, diet_type)
+        fats = self.__fats_calculation(energy_loss, calories, diet_type)
+        carbohydrates = self.__carbohydrates_calculation(energy_loss, calories, proteins, fats, diet_type)
 
         return (calories, proteins, fats, carbohydrates)
 
@@ -58,3 +63,4 @@ class NutrientCalculator:
             return calories*0.5/4
         else:
             return calories*0.5/4
+

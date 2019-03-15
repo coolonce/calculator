@@ -3,6 +3,7 @@ import sqlalchemy
 class FoodDB:
     def __init__(self, database):
         self.database = database
+        #TODO get this mapping from json-file
         self.mapping = {
     "0": 10,
     "1": 11,
@@ -60,9 +61,8 @@ class FoodDB:
     def get_all_food_CPFC(self, food_id_list):
         food_CPFC_dict={}
         for id in food_id_list:
-            current_food_CPFC ={}
             temp=self.database.execute(sqlalchemy.text("select * from food where food.id=:id"), {"id":id}).fetchall()
-            food_CPFC_dict[id] = list(temp[0])
+            food_CPFC_dict[id] = list(temp[0][3:])
         return food_CPFC_dict
 
 

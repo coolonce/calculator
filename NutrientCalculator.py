@@ -29,8 +29,16 @@ class NutrientCalculator:
         proteins = self.__proteins_calculation(energy_loss, calories, diet_type)
         fats = self.__fats_calculation(energy_loss, calories, diet_type)
         carbohydrates = self.__carbohydrates_calculation(energy_loss, calories, proteins, fats, diet_type)
-
-        return (calories, proteins, fats, carbohydrates)
+        water = mass*31/2 if gender==0 else mass*35/2
+        sugar= carbohydrates/10
+        fiber=20
+        cholesterol=300
+        #просто предпологаю, что крахмальных углеводов должно быть 90% всех углеводов -- кол-во пищевых волокон
+        starch=carbohydrates-sugar-fiber
+        #с википедии
+        trans_fats=calories/100
+        #Золу надо добавлять уже позже, после получения нормы минералов
+        return [calories, proteins, fats, carbohydrates, water, sugar, fiber, starch, cholesterol, trans_fats]
 
     def __calories_interval_calculation(self, consumption_rate_norm, type):
         if type == DietType.WEIGHT_LOSS:

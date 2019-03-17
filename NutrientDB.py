@@ -11,6 +11,7 @@ class NutrientDB:
         self.nutrient_norms = self.database.execute(sqlalchemy.text("select Nutrient_idNutrient, value from Nutrient_has_Gender where Nutrient_has_Gender.Gender_idGender=:idGender"), {'idGender': gender})
         mineral_sum=0
         for nutrient in self.nutrient_norms:
+            #константы - айдишники минералов в базе
             if nutrient[0] in [14,15,16,17,20,21,23,24,25,28]:
                 mineral_sum+=nutrient[1]
         return self.nutrient_norms, mineral_sum

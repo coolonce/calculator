@@ -13,7 +13,7 @@ class NutrientCalculator:
         #алгоритм Харриса-Бенедикта используется при похудении
         #в остальных же случаях используется алгоритм Миффлина-Сан Жеора
         main_energy_exchange = 0
-        if gender == 0: #Для женщин
+        if gender == 2: #Для женщин
             if diet_type == DietType.WEIGHT_LOSS:
                 main_energy_exchange = 65 + 9.6*mass + 1.8*height - 4.7*age
             else:

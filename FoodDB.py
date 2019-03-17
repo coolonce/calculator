@@ -30,39 +30,34 @@ class FoodDB:
     "28": 62,
     "29": 14
   }
-    #получаем на вход список продуктов, возвращаем словарь, где ключ - id продукта, значение - содержание витаминов
-    def get_all_food_vitamins(self, food_id_list):
-        food_vitamin_dict = {}
-        for id in food_id_list:
-            current_food_vitamin = {}
-            temp=self.database.execute(sqlalchemy.text("select * from vitamins where vitamins.food_id=:id"),
-                                       {"id":id}).fetchall()
-            for i in range(2,len(temp[0])):
-                if i in self.mapping.values():
-                    current_food_vitamin[i]=temp[0][i]
-            food_vitamin_dict[id]=current_food_vitamin
-        return food_vitamin_dict
+    #получаем на вход список продуктов, возвращаем словарь, где ключ - id витамина по мапе, значение - значение витамина
+    def get_food_vitamins_by_id(self, food_id):
+        food_vitamin = {}
+        temp=self.database.execute(sqlalchemy.text("select * from vitamins where vitamins.food_id=:id"),
+                                    {"id":food_id}).fetchall()
+        for i in range(2,len(temp[0])):
+            if i in self.mapping.values():
+                food_vitamin[i]=temp[0][i]
 
-    # получаем на вход список продуктов, возвращаем словарь, где ключ - id продукта, значение - содержание минералов
-    def get_all_food_minerals(self, food_id_list):
-        food_mineral_dict = {}
-        for id in food_id_list:
-            current_food_minerals = {}
-            temp = self.database.execute(sqlalchemy.text("select * from vitamins where vitamins.food_id=:id"),
-                                         {"id": id}).fetchall()
-            for i in range(2, len(temp[0])):
-                if i + 50 in self.mapping.values():
-                    current_food_minerals[i + 50] = temp[0][i]
-            food_mineral_dict[id] = current_food_minerals
-        return food_mineral_dict
+        return food_vitamin
+
+    # получаем на вход список продуктов, возвращаем словарь, где ключ - id минерала по мапе, значение - значение минералов
+    def get_food_minerals_by_id(self, food_id):
+        food_mineral = {}
+        temp = self.database.execute(sqlalchemy.text("select * from vitamins where vitamins.food_id=:id"),
+                                    {"id": food_id}).fetchall()
+        for i in range(2, len(temp[0])):
+            if i + 50 in self.mapping.values():
+                food_mineral[i + 50] = temp[0][i]
+
+        return food_mineral
 
     # получаем на вход список продуктов, возвращаем словарь, где ключ - id продукта,
     # значение - содержание БЖУ и сопутствующих им нутриентов
-    def get_all_food_CPFC(self, food_id_list):
-        food_CPFC_dict={}
-        for id in food_id_list:
-            temp=self.database.execute(sqlalchemy.text("select * from food where food.id=:id"), {"id":id}).fetchall()
-            food_CPFC_dict[id] = list(temp[0][3:])
-        return food_CPFC_dict
+    def get_food_CPFC_by_id(self, food_id):
+
+        temp=self.database.execute(sqlalchemy.text("select * from food where food.id=:id"), {"id":food_id}).fetchall()
+        return dict(temp[0][3:])
+
 
 

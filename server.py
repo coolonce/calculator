@@ -7,14 +7,13 @@ from NutrientDB import NutrientDB
 from FoodDB import FoodDB
 
 nutrient_norms_connection=sqlalchemy.create_engine('mysql+pymysql://root@localhost/Nutrients')
-nutrient_norms = NutrientDB(nutrient_norms_connection)
 #Формируем списки норм для мужчин и женщин в формате {"Male":{нормы для мужчин},"Female":{нормы для женщин}
-nutrient_norms = {"Male": dict(nutrient_norms.get_all_nutrient_values_for_gender(1).fetchall()),"Female": dict(nutrient_norms.get_all_nutrient_values_for_gender(2).fetchall())}
-print(nutrient_norms)
+#nutrient_norms = {"Male": dict(nutrient_norms.get_all_nutrient_values_for_gender(1)[0]),"Female": dict(nutrient_norms.get_all_nutrient_values_for_gender(2)[0])}
 
 food_db_connection=sqlalchemy.create_engine('mysql+pymysql://root@localhost/nutrition_db')
-food_db=FoodDB(food_db_connection)
-food_db.get_all_food_vitamins([1, 2])
+"""
+Male - 1; Female - 2
+"""
 
 """
 app = Flask(__name__)

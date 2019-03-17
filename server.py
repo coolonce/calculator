@@ -5,17 +5,12 @@ from ServerErrorHandlers import InvalidUsage
 from NutrientCalculator import NutrientCalculator
 from NutrientDB import NutrientDB
 from FoodDB import FoodDB
+from CoefCalc import CoefCalc
 
-nutrient_norms_connection=sqlalchemy.create_engine('mysql+pymysql://root@localhost/Nutrients')
-#Формируем списки норм для мужчин и женщин в формате {"Male":{нормы для мужчин},"Female":{нормы для женщин}
-#nutrient_norms = {"Male": dict(nutrient_norms.get_all_nutrient_values_for_gender(1)[0]),"Female": dict(nutrient_norms.get_all_nutrient_values_for_gender(2)[0])}
-
-food_db_connection=sqlalchemy.create_engine('mysql+pymysql://root@localhost/nutrition_db')
 """
 Male - 1; Female - 2
 """
 
-"""
 app = Flask(__name__)
 
 @app.errorhandler(InvalidUsage)
@@ -30,10 +25,14 @@ def test_handler():
         d = request.get_json()
         if "status" in d:
             if d["status"]=="ok" :
+
+                nutrient_norms_connection = sqlalchemy.create_engine('mysql+pymysql://root@localhost/Nutrients')
+                food_db_connection = sqlalchemy.create_engine('mysql+pymysql://root@localhost/nutrition_db')
+
                 height = d["data"]["height"]
                 gender=-1
                 if d["data"]["gender"] == "Female":
-                    gender=0
+                    gender=2
                 else:
                     gender=1
                 mass = d["data"]["mass"]
@@ -45,14 +44,14 @@ def test_handler():
                     diet_type=2
                 else:
                     diet_type=3
-                calc = NutrientCalculator()
-                result = calc.calculate_nutrients(gender, mass, height, age, diet_type)
+                food_list=d["data"]["food_list"]
+                calc = CoefCalc()
+                result = calc.get_cpfc_and_combinations(gender, mass, height, age, diet_type, nutrient_norms_connection, food_db_connection, food_list)
                 
-                #js_res = {"status":"ok","data":result}
-                #return jsonify(js_res)
+                js_res = {"status":"ok","data":result}
+                return jsonify(js_res)
             else:
                 raise InvalidUsage('Invalid data format', status_code=400)
         else:
             raise InvalidUsage('invalid data format', status_code=400)
 app.run()
-"""

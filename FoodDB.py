@@ -57,7 +57,11 @@ class FoodDB:
     def get_food_CPFC_by_id(self, food_id):
 
         temp=self.database.execute(sqlalchemy.text("select * from food where food.id=:id"), {"id":food_id}).fetchall()
-        return dict(temp[0][3:])
+        temp=dict(temp[0])
+        temp.pop("id", None)
+        temp.pop("category_id", None)
+        temp.pop("name", None)
+        return temp
 
 
 

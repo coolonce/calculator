@@ -8,7 +8,7 @@ class NutrientDB:
     #Возвращает все нутриенты и их значения из базы, в зависимости от пола
     #Также возвращает значение необходимой золы
     def get_all_nutrient_values_for_gender(self, gender):
-        self.nutrient_norms = self.database.execute(sqlalchemy.text("select Nutrient_idNutrient, value from Nutrient_has_Gender where Nutrient_has_Gender.Gender_idGender=:idGender"), {'idGender': gender})
+        self.nutrient_norms = self.database.execute(sqlalchemy.text("select Nutrient_idNutrient, value from Nutrient_has_Gender where Nutrient_has_Gender.Gender_idGender=:idGender"), {'idGender': gender}).fetchall()
         mineral_sum=0
         for nutrient in self.nutrient_norms:
             #константы - айдишники минералов в базе

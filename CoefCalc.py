@@ -31,6 +31,7 @@ class CoefCalc:
     "28": 62,
     "29": 14
   }
+    #Проводит предварительную обратботку данных, а также возвращает результаты расчёта
     def get_cpfc_and_combinations(self, gender, mass, height, age, diet_type, norms_db, food_db, food_list):
         nc = NutrientCalculator()
         CPFC_list=nc.calculate_nutrients(gender, mass, height, age, diet_type)
@@ -38,6 +39,7 @@ class CoefCalc:
         nutrient_norms_db = NutrientDB(norms_db)
         nutrient_norms_list, ash = nutrient_norms_db.get_all_nutrient_values_for_gender(gender)
         nutrient_norms_list = dict(nutrient_norms_list)
+        ash /= 1000
         CPFC_list.insert(5,ash)
         result = self.__calculate(food_db, food_list, CPFC_list, nutrient_norms_list)
         return {"cpfc":CPFC_list[:6], "combinations":result}

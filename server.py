@@ -46,9 +46,12 @@ def test_handler():
                     diet_type=3
                 food_list=d["data"]["food_list"]
                 calc = CoefCalc()
-                result = calc.get_cpfc_and_combinations(gender, mass, height, age, diet_type, nutrient_norms_connection, food_db_connection, food_list)
-                
-                js_res = {"status":"ok","data":result}
+                calculations_result = calc.get_cpfc_and_combinations(gender, mass, height, age, diet_type, nutrient_norms_connection, food_db_connection, food_list)
+                #дневная норма бжу, калорий, воды(полученной из еды), золы
+                cpfc = {"calories":calculations_result["cpfc"][0], "proteins":calculations_result["cpfc"][1], "fats":calculations_result["cpfc"][2],
+                        "carbohydrates":calculations_result["cpfc"][3],"water":calculations_result["cpfc"][4], "ash": calculations_result["cpfc"][5]}
+
+                js_res = {"status":"ok","data":{"cpfc":cpfc, "combinatons":calculations_result["combinations"]}}
                 return jsonify(js_res)
             else:
                 raise InvalidUsage('Invalid data format', status_code=400)
